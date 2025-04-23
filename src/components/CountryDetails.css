@@ -1,0 +1,154 @@
+/* src/components/CountryDetails/CountryDetails.css */
+.country-detail-page {
+  padding: 2rem 0;
+}
+
+.back-button {
+  display: inline-block;
+  padding: 0.5rem 2rem;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 3rem;
+  transition: transform 0.2s ease;
+}
+
+.back-button:hover {
+  transform: translateX(-5px);
+}
+
+.country-detail-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.country-detail-flag {
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+.country-detail-info h1 {
+  margin-bottom: 2rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.info-grid p {
+  margin: 0.5rem 0;
+}
+
+.border-countries {
+  margin-top: 2rem;
+}
+
+.border-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.border-button {
+  padding: 0.5rem 1rem;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.9rem;
+  transition: transform 0.2s ease;
+}
+
+.border-button:hover {
+  transform: translateY(-2px);
+}
+
+.map-section {
+  margin-top: 3rem;
+}
+
+.map-section h2 {
+  margin-bottom: 1rem;
+}
+
+/* Countries grid styles */
+.countries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 4rem;
+  padding: 2rem 0;
+}
+
+.country-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.country-card:hover {
+  transform: translateY(-5px);
+}
+
+.country-flag {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.country-info {
+  padding: 1.5rem;
+}
+
+.country-info h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+}
+
+.country-info p {
+  margin: 0.5rem 0;
+}
+
+/* Responsive styles */
+@media (max-width: 1024px) {
+  .country-detail-content {
+    gap: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .country-detail-content {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .countries-grid {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .back-button {
+    margin-bottom: 2rem;
+  }
+
+  .country-detail-info h1 {
+    margin-bottom: 1.5rem;
+  }
+}

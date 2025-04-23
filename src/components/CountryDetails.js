@@ -1,46 +1,111 @@
 import React from 'react';
-import Flag from './Flag';
-import Borders from './Borders';
+import { useParams, Link } from 'react-router-dom';
+import './CountryDetails.css';
 
-function CountryDetails({ country }) {
-  if (!country) return <p className="p-4">Loading country details...</p>;
+const CountryDetails = ({ countries }) => {
+  const { name } = useParams();
+  const decodedName = name ? decodeURIComponent(name) : null;
 
-  const {
-    name,
-    capital,
-    region,
-    subregion,
-    population,
-    area,
-    latlng,
-    borders,
-    timezones,
-    currencies,
-    languages,
-    flags
-  } = country;
+  if (!Array.isArray(countries)) {
+    return <p>No data available.</p>;
+  }
 
-  return (
-    <section className="p-6 max-w-4xl mx-auto bg-white shadow rounded-md mt-6">
-      <h2 className="text-2xl font-bold mb-4">{name.common}</h2>
-      <Flag flagUrl={flags.svg} name={name.common} />
+  // Single country detail (route: /country/:name)
+  const country = decodedName
+    ? countries.find(c => c.name.common.toLowerCase() === decodedName.toLowerCase())
+    : null;
 
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 text-sm">
-        <li><strong>Capital:</strong> {capital?.join(', ')}</li>
-        <li><strong>Region/Subregion:</strong> {region} / {subregion}</li>
-        <li><strong>Population:</strong> {population.toLocaleString()}</li>
-        <li><strong>Area:</strong> {area.toLocaleString()} km²</li>
-        <li><strong>Coordinates:</strong> {latlng.join(', ')}</li>
-        <li><strong>Timezones:</strong> {timezones.join(', ')}</li>
-        <li><strong>Currency:</strong> {Object.values(currencies || {}).map(cur => cur.name).join(', ')}</li>
-        <li><strong>Languages:</strong> {Object.values(languages || {}).join(', ')}</li>
-      </ul>
+  if (name && !country) {
+    return <div>Country not found</div>;
+  }
 
-      <div className="mt-4">
-        <Borders borders={borders} />
+  // Country list (route: /)
+  if (!name) {
+    return (
+      <div className="countries-grid">
+        {countries.map(country => (
+          <Link 
+            to={`/country/${encodeURIComponent(country.name.common)}`} 
+            key={country.cca3}
+            className="country-card"
+          >
+            <img 
+              src={country.flags?.png} 
+              alt={`Flag of ${country.name.common}`}
+              className="country-flag"
+            />
+            <div className="country-info">
+              <h2>{country.name.common}</h2>
+              <p><strong>Population:</strong> {country.population.toLocaleString()}</p>
+              <p><strong>Region:</strong> {country.region}</p>
+              <p><strong>Capital:</strong> {country.capital?.[0] || 'N/A'}</p>
+            </div>
+          </Link>
+        ))}
       </div>
-    </section>
+    );
+  }
+
+  // Detailed country view
+  return (
+    <div className="country-detail-page">
+      <Link to="/" className="back-button">← Back</Link>
+      <div className="country-detail-content">
+        <img 
+          src={country.flags?.svg} 
+          alt={`Flag of ${country.name.common}`}
+          className="country-detail-flag"
+        />
+        <div className="country-detail-info">
+          <h1>{country.name.common}</h1>
+          <div className="info-grid">
+            <div>
+              <p><strong>Native Name:</strong> {
+                Object.values(country.name.nativeName || {})[0]?.common || 'N/A'
+              }</p>
+              <p><strong>Population:</strong> {country.population.toLocaleString()}</p>
+              <p><strong>Region:</strong> {country.region}</p>
+              <p><strong>Sub Region:</strong> {country.subregion || 'N/A'}</p>
+              <p><strong>Capital:</strong> {country.capital?.[0] || 'N/A'}</p>
+              <p><strong>Area:</strong> {country.area?.toLocaleString() || 'N/A'} km²</p>
+            </div>
+            <div>
+              <p><strong>Coordinates:</strong> {country.latlng?.join(', ') || 'N/A'}</p>
+              <p><strong>Timezones:</strong> {country.timezones?.join(', ') || 'N/A'}</p>
+              <p><strong>Currencies:</strong> {
+                Object.values(country.currencies || {})
+                  .map(c => `${c.name} (${c.symbol})`)
+                  .join(', ') || 'N/A'
+              }</p>
+              <p><strong>Languages:</strong> {
+                Object.values(country.languages || {}).join(', ') || 'N/A'
+              }</p>
+              <p><strong>Top Level Domain:</strong> {country.tld?.[0] || 'N/A'}</p>
+            </div>
+          </div>
+          {country.borders && country.borders.length > 0 && (
+            <div className="border-countries">
+              <strong>Border Countries:</strong>
+              <div className="border-buttons">
+                {country.borders.map(border => {
+                  const borderCountry = countries.find(c => c.cca3 === border);
+                  return borderCountry && (
+                    <Link 
+                      to={`/country/${encodeURIComponent(borderCountry.name.common)}`}
+                      key={border}
+                      className="border-button"
+                    >
+                      {borderCountry.name.common}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
-}
+};
 
 export default CountryDetails;
